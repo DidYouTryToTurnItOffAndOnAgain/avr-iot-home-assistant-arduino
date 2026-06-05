@@ -85,7 +85,7 @@ float readLightPct(void) {
 #endif
 
 // LED Indicator Bar Definitions
-#define LED_PIN    6      // Use an Arduino pin number (e.g. PA4 → 6)
+#define LED_PIN    6      // Use an Arduino pin number (e.g. PA6 → 6 for mega4808)
 #define LED_COUNT  25
 
 constexpr int16_t IMPORT_MAX = 12000;

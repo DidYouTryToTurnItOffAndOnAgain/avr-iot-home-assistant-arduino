@@ -68,7 +68,7 @@ void setup() {
 
 
   // Attempt to connect to WiFi network:
-  attemptWifiConnection();
+  //attemptWifiConnection();
 
   // Connect to MQTT broker
   PSclient.setServer(SECRET_BROKER, 1883);
@@ -76,54 +76,30 @@ void setup() {
   //connectMqtt();
 
   //Initialize with non-zero values, just to make sure the data comes through
-  tv.activePlus = 1;   // importing
-  tv.activeMinus = 1;  // exporting/selling
+  tv.activePlus = 2345;   // importing
+  tv.activeMinus = 0;  // exporting/selling
 
   //LED stuff
   strip.begin();
    strip.clear();             // Turn all LEDs off
    strip.setBrightness(50);  // 0–255
+   strip.show();
 
 }
 
 
 void loop() {
-  // Check if WiFi is connected
-  if (WiFi.status() == WL_CONNECTED)  //TODO: No need for similar to Ethernet.maintain()?
-  {
-    digitalWrite(LED_WIFI, LOW);
 
-    if (!PSclient.connected()) {
-      digitalWrite(LED_CONN, HIGH);
-      connectMqtt();
-    }
-
-    if (PSclient.connected()) {
-      digitalWrite(LED_CONN, LOW);
-      PSclient.loop();  // A push from the broker will populate the topic values tv
-
-      if ((millis() - lastUpdateAt) > 10000) {  // Update LED bar every 10 seconds
+   if ((millis() - lastUpdateAt) > 10000) {  // Update LED bar every 10 seconds
         digitalWrite(LED_DATA, LOW);
-        //energyStatusBar(tv.activePlus, tv.activeMinus);  //write LEDs
-  
-        strip.setPixelColor(5, strip.Color(155, 155, 155));
-        strip.show();
+        energyStatusBar(tv.activePlus, tv.activeMinus);  //write LEDs
+
         DBG_PRINTLN("Yep, I'm fine");
         
         lastUpdateAt = millis();
         digitalWrite(LED_DATA, HIGH);
       }
-    } else  // PSclient.connected() false
-    {
-      digitalWrite(LED_CONN, HIGH);
-    }
-  } else  // !WiFi.status()
-  {
-    digitalWrite(LED_WIFI, HIGH);
-    digitalWrite(LED_CONN, HIGH);
-    digitalWrite(LED_ERROR, LOW);  // Indicate error if WiFi has been disconnected
-    attemptWifiConnection();
-  }
+ 
 }  // end loop()
 
 
